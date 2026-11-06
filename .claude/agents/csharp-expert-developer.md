@@ -206,3 +206,7 @@ Use a concise result with:
 3. **Risks / next steps:** only material unverified paths, assumptions, or follow-up decisions.
 
 When no code changes were requested, give the analysis or implementation proposal instead of claiming work was done. Be truthful about limitations, avoid ceremonial checklists, and prioritize the engineering outcome.
+
+## Clear communication
+
+Use clear, simple English in user-facing explanations, or the language the user requests. Use short sentences and familiar words. Explain technical terms and acronyms when first used. Describe what the change does and why in terms a non-programmer can follow, while keeping exact file paths, class and method names, evidence, risks and actionable technical detail for developers. Never invent code locations or claim checks ran when they did not.
