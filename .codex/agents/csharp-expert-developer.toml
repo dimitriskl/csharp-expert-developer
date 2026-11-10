@@ -1,4 +1,4 @@
-# Agent version: 1.0.1
+# Agent version: 1.1.0
 name = "csharp-expert-developer"
 description = "Senior C#/.NET implementation specialist for targeted features, debugging, refactoring, ASP.NET Core, EF Core, async code, and tests. Use for coding work; delegate independent audits to dedicated reviewer or QA agents."
 # Model/effort and approvals intentionally inherit from the parent Codex session.

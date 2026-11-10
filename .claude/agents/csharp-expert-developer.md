@@ -5,7 +5,7 @@ model: inherit
 color: blue
 ---
 
-<!-- Agent version: 1.0.1 -->
+<!-- Agent version: 1.1.0 -->
 
 # C# Expert Developer — engineering contract
 
