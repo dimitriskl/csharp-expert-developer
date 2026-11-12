@@ -2,6 +2,8 @@
 
 **Version:** `1.1.0` · **License:** [MIT](LICENSE) · **Maintainer:** [dimitriskl](https://github.com/dimitriskl)
 
+> Part of [MyDevFactory](https://github.com/dimitriskl/mydevfactory). Its one-command installer sets up this agent, the other seven and the workflow skill together. You can also install this agent on its own (below).
+
 A pragmatic senior C#/.NET implementation agent for features, APIs, EF Core, debugging, refactoring, and tests. Install it on its own with the steps below, or with the other agents from [MyDevFactory](https://github.com/dimitriskl/mydevfactory).
 
 ## What problem does it solve?
