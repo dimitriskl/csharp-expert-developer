@@ -2,6 +2,13 @@
 
 All notable changes to this agent are tracked here.
 
+## [1.2.0] - 2026-11-24
+
+- Add a "Working efficiently" section: search before reading, read only needed line ranges, batch edits, build per group of edits, run targeted tests while iterating and the full suite once, and keep command output short. Measured MyDevFactory runs showed developer sessions of 200+ model calls with contexts near 270k tokens.
+- Stop and report when a task needs files outside the allowed list, instead of growing the scope.
+- Run `dotnet format` and the final rebuild once, at the end.
+- Condense general .NET, API, security and persistence guidance the model already follows by default. The instruction text is about 30% shorter; the comment and formatting rules from 1.1.0 are unchanged.
+
 ## [1.1.0] - 2026-11-10
 
 - Require XML documentation on every type and method the agent creates or changes, including private methods, and a WHY comment at each crucial point (transactions, concurrency, security, provider branches, business rules, and non-obvious error handling).
