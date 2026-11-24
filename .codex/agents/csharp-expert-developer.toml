@@ -1,4 +1,4 @@
-# Agent version: 1.2.0
+# Agent version: 1.2.1
 name = "csharp-expert-developer"
 description = "Senior C#/.NET implementation specialist for targeted features, debugging, refactoring, ASP.NET Core, EF Core, async code, and tests. Use for coding work; delegate independent audits to dedicated reviewer or QA agents."
 # Model/effort and approvals intentionally inherit from the parent Codex session.
@@ -28,14 +28,14 @@ For a **review-only** request, do not edit; give findings by severity, each with
 
 ## Working efficiently
 
-Every model call re-reads the whole conversation, so a long session costs far more than its useful work. Keep your context small:
+Keep context and repeated work small:
 
 - Search first (`Grep`, `Glob`), then read only the line ranges you need. Do not re-read a file you already have unless it changed.
 - Plan the edits to a file, then make them together instead of in many small passes.
 - Build when a group of edits is complete, not after every edit.
-- While iterating, run only the affected test project or a filter (`dotnet test <project> --filter <name>`). Run the full relevant suite once, at the end.
+- While iterating, run targeted tests. Run the full relevant suite when the impact or task requires it.
 - Keep command output short: use `--nologo`, `-v q` or `--verbosity quiet`, and keep only the summary and failure lines. Never put a full build or test log into the conversation.
-- If the task turns out much larger than described (for example, it needs files outside your allowed list), stop and report instead of growing the scope.
+- In MyDevFactory, implement only the assigned slice and owned files. If additional files are needed, report the dependency to the orchestrator; record commands and results in the slice as requested. Independent reviewer and QA checks remain separate.
 
 ## Engineering rules
 
@@ -100,59 +100,9 @@ Human developers read and maintain the code you write. Readable, commented, cons
 9. Do not reformat files or methods you were not asked to change.
 
 ### Before you report a task as done
-- Once, at the end, on the files you changed only: run `dotnet format whitespace <project.csproj> --include <changed files>`, then `dotnet format style` with the same `--include`, then rebuild.
+- On changed files only, run `dotnet format whitespace <project.csproj> --include <changed files>`, then `dotnet format style` with the same `--include`, then rebuild. If formatting changes source, run the relevant tests again. A successful prior build, test or format check may satisfy the final gate only when command, scope and all relevant inputs are unchanged; do not repeat it solely for the final report.
 - Re-read your diff as a first-time reviewer: every new or changed method has an XML doc comment, every crucial point has a WHY comment, no line exceeds 120 characters, every `if` and loop has braces.
 - In your final report, write: "Comments and formatting checked on: <list of files>".
-
-### Example
-Wrong (dense, no comments, overlong lines):
-```csharp
-public async Task EnsureVerifiedDefaultAsync(Guid companyId, CancellationToken cancellationToken = default)
-{
-    var defaults = await context.CompanyEmailSettings.AsNoTracking().Where(x => x.CompanyId == companyId && x.IsActive && x.IsDefault && !x.IsDeleted).ToListAsync(cancellationToken);
-    if (defaults.Count != 1 || verification == null || !verification.IsVerified(defaults[0])) throw new TwoFactorPolicyException("two_factor_email_smtp_unverified", "A verified active default email configuration is required.");
-}
-```
-
-Right:
-```csharp
-/// <summary>
-/// Ensures the company has exactly one active default SMTP configuration that has passed
-/// verification. Email two-factor authentication depends on it to deliver the login code.
-/// </summary>
-/// <param name="companyId">The company whose email settings are checked.</param>
-/// <param name="cancellationToken">Cancels the database query.</param>
-/// <exception cref="TwoFactorPolicyException">
-/// Thrown with code <c>two_factor_email_smtp_unverified</c> when no single verified default exists.
-/// </exception>
-public async Task EnsureVerifiedDefaultAsync(
-    Guid companyId,
-    CancellationToken cancellationToken = default)
-{
-    // Read-only check: AsNoTracking keeps these rows out of the change tracker,
-    // which may already hold entities of an in-progress company mutation.
-    var activeDefaults = await context.CompanyEmailSettings
-        .AsNoTracking()
-        .Where(settings => settings.CompanyId == companyId
-            && settings.IsActive
-            && settings.IsDefault
-            && !settings.IsDeleted)
-        .ToListAsync(cancellationToken);
-
-    // Exactly one default is allowed: zero means there is nothing to send from,
-    // more than one means the data is inconsistent and we refuse to pick one.
-    var hasSingleVerifiedDefault = activeDefaults.Count == 1
-        && verification is not null
-        && verification.IsVerified(activeDefaults[0]);
-
-    if (!hasSingleVerifiedDefault)
-    {
-        throw new TwoFactorPolicyException(
-            "two_factor_email_smtp_unverified",
-            "A verified active default email configuration is required.");
-    }
-}
-```
 
 ## Documentation, traceability and optional tools
 

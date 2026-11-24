@@ -2,6 +2,12 @@
 
 All notable changes to this agent are tracked here.
 
+## [1.2.1] - 2026-11-24
+
+- Remove the lengthy example while retaining the mandatory comment and formatting rules.
+- Reuse successful validation only when command, scope and relevant inputs are unchanged; rerun relevant tests after formatting changes source.
+- Clarify MyDevFactory owned-file and evidence handoff without replacing independent review or QA.
+
 ## [1.2.0] - 2026-11-24
 
 - Add a "Working efficiently" section: search before reading, read only needed line ranges, batch edits, build per group of edits, run targeted tests while iterating and the full suite once, and keep command output short. Measured MyDevFactory runs showed developer sessions of 200+ model calls with contexts near 270k tokens.
